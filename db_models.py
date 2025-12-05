@@ -26,3 +26,13 @@ class Source(Base):
     id = Column(Integer, primary_key=True, index=True)
     souce_name = Column(String, nullable=False)
     create_time = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+
+class Contact(Base):
+    __tablename__ = "Contacts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    lead_id =
+    source_id =
+    operator_id =
+    create_time = Column(DateTime, default=lambda: datetime.now(timezone.utc))

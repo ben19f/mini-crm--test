@@ -19,7 +19,7 @@ db = SessionLocal()
 
 source = add_source(
     db=db,
-    source_name="bot01"
+    source_name="site01"
 )
 
 db.close()

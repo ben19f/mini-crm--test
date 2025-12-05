@@ -17,7 +17,7 @@ db = SessionLocal()
 
 operator = add_operator(
         db=db,
-        name="первый опер",
+        name="Второй оператор",
         active_status=True,
         workload=5
     )

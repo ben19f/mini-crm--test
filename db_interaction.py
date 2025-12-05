@@ -2,6 +2,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from datetime import datetime
+from datetime import timezone
+
+
 
 
 DATABASE_URL = "sqlite:///home/ben/PycharmProjects/mini-crm--test/crm.db"
@@ -16,13 +19,13 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 class Operator(Base):
-    __tablename__ = "operators"
+    __tablename__ = "Operators"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     active_status = Column(Boolean, default=True)
     workload = Column(Integer, default=5)
-    create_time = Column(DateTime, default=datetime.utcnow)
+    create_time = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
 
 class Lead(Base):
@@ -30,5 +33,5 @@ class Lead(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     unique_id = Column(String, nullable=False)
-    create_time = Column(DateTime, default=datetime.utcnow)
+    create_time = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 

@@ -1,7 +1,7 @@
-from sqlalchemy.orm import Session
+from database import SessionLocal
 from db_models import Operator
 
-def add_operator(db: Session, name: str, active_status: bool = True, workload: int = 5):
+def add_operator(db , name: str, active_status: bool = True, workload: int = 5):
     """
     Добавляеv оператора
     """
@@ -12,6 +12,8 @@ def add_operator(db: Session, name: str, active_status: bool = True, workload: i
     )
     db.add(operator)
     db.commit()
+
+db = SessionLocal()
 
 operator = add_operator(
         db=db,

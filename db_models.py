@@ -10,7 +10,7 @@ class Operator(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     active_status = Column(Boolean, default=True)
-    workload = Column(Integer, default=5)
+    workload_limit = Column(Integer, default=5)
     create_time = Column(DateTime, default=datetime.utcnow)
 
     weights = relationship("OperatorWeight", back_populates="operator")

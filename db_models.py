@@ -20,3 +20,9 @@ class Lead(Base):
     unique_id = Column(String, nullable=False)
     create_time = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
+class Source(Base):
+    __tablename__ = "Sources"
+
+    id = Column(Integer, primary_key=True, index=True)
+    souce_name = Column(String, nullable=False)
+    create_time = Column(DateTime, default=lambda: datetime.now(timezone.utc))

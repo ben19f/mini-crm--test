@@ -1,5 +1,5 @@
 from database import engine, Base
-from db_models import Lead, Operator
+from db_models import Lead, Operator, Contact, OperatorWeight, Source
 
 def create_tables():
     Base.metadata.create_all(bind=engine)

@@ -14,8 +14,24 @@ def add_lead(db, unique_id: str) -> Lead:
     db.add(lead)
     db.commit()
 
+
+def chek_lead(db, unique_id: str) -> Lead:
+    """
+    Ищет лида
+    """
+    lead = db.query(Lead).filter(Lead.unique_id == unique_id).first()
+
+    if lead is None:
+        add_lead(db, unique_id)
+        print(f"Создан лид {unique_id}")
+    else:
+        print(f"лид {lead.unique_id} - уже есть")
+
+
+
+
 db = SessionLocal()
 
-add_lead(db, 'иванСочи')
+chek_lead(db, 'егорТуапсер')
 
 db.close()

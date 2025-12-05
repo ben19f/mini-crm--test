@@ -13,7 +13,8 @@ class Operator(Base):
     workload = Column(Integer, default=5)
     create_time = Column(DateTime, default=datetime.utcnow)
 
-
+    weights = relationship("OperatorWeight", back_populates="operator")
+    contacts = relationship("Contact", back_populates="operator")
 
 class Lead(Base):
     __tablename__ = "leads"
@@ -22,6 +23,7 @@ class Lead(Base):
     unique_id = Column(String, nullable=False)
     create_time = Column(DateTime, default=datetime.utcnow)
 
+    contacts = relationship("Contact", back_populates="lead")
 
 class Source(Base):
     __tablename__ = "sources"
@@ -30,7 +32,8 @@ class Source(Base):
     source_name = Column(String, nullable=False)
     create_time = Column(DateTime, default=datetime.utcnow)
 
-
+    weights = relationship("OperatorWeight", back_populates="source")
+    contacts = relationship("Contact", back_populates="source")
 
 
 class OperatorWeight(Base):

@@ -1,5 +1,8 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 from datetime import timezone, datetime
+
+from sqlalchemy.orm import relationship
+
 from database import Base
 
 
@@ -27,6 +30,16 @@ class Source(Base):
     souce_name = Column(String, nullable=False)
     create_time = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
+
+class OperatorWeight(Base):
+    __tablename__ = "Operators"
+
+    id = Column(Integer, primary_key=True, index=True)
+    source_id = Column(Integer, ForeignKey("sources.id"))
+    source = relationship("Source")
+    operator_id = Column(Integer, ForeignKey("operators.id"))
+    operator = relationship("Operator")
+    weight = Column(Integer, default=10)
 
 class Contact(Base):
     __tablename__ = "Contacts"

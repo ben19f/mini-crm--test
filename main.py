@@ -23,3 +23,12 @@ class Operator(Base):
     active_status = Column(Boolean, default=True)
     workload = Column(Integer, default=5)
     create_time = Column(DateTime, default=datetime.utcnow)
+
+
+class Lead(Base):
+    __tablename__ = "Leads"
+
+    id = Column(Integer, primary_key=True, index=True)
+    unique_id = Column(String, nullable=False)
+    create_time = Column(DateTime, default=datetime.utcnow)
+

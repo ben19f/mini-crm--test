@@ -64,4 +64,3 @@ else:
     print("Нет доступных операторов для bot01")
 
 result_operator = select_heaviest_operator (db, operators)
-print(result_operator)

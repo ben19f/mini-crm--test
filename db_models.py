@@ -1,21 +1,6 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
-from datetime import datetime
-from datetime import timezone
-
-
-
-
-DATABASE_URL = "sqlite:///home/ben/PycharmProjects/mini-crm--test/crm.db"
-
-engine = create_engine(
-    DATABASE_URL, connect_args={"check_same_thread": False}
-)
-
-#modeli
-Base = declarative_base()
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+from datetime import timezone, datetime
+from database import Base
 
 
 class Operator(Base):

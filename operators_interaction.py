@@ -1,5 +1,5 @@
 from db_models import Operator, Contact
-from config import operator_dict
+from sources.config import operator_dict
 from database import SessionLocal
 import random
 

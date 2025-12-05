@@ -1,51 +1,62 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
-from datetime import timezone, datetime
-
 from sqlalchemy.orm import relationship
-
 from database import Base
+from datetime import datetime
 
 
 class Operator(Base):
-    __tablename__ = "Operators"
+    __tablename__ = "operators"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     active_status = Column(Boolean, default=True)
     workload = Column(Integer, default=5)
-    create_time = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    create_time = Column(DateTime, default=datetime.utcnow)
+
 
 
 class Lead(Base):
-    __tablename__ = "Leads"
+    __tablename__ = "leads"
 
     id = Column(Integer, primary_key=True, index=True)
     unique_id = Column(String, nullable=False)
-    create_time = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    create_time = Column(DateTime, default=datetime.utcnow)
+
 
 class Source(Base):
-    __tablename__ = "Sources"
+    __tablename__ = "sources"
 
     id = Column(Integer, primary_key=True, index=True)
-    souce_name = Column(String, nullable=False)
-    create_time = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    source_name = Column(String, nullable=False)
+    create_time = Column(DateTime, default=datetime.utcnow)
+
+
 
 
 class OperatorWeight(Base):
-    __tablename__ = "Operators"
+    __tablename__ = "operator_weights"
 
     id = Column(Integer, primary_key=True, index=True)
-    source_id = Column(Integer, ForeignKey("sources.id"))
-    source = relationship("Source")
-    operator_id = Column(Integer, ForeignKey("operators.id"))
-    operator = relationship("Operator")
+
+    source_id = Column(Integer, ForeignKey("sources.id"), nullable=False)
+    operator_id = Column(Integer, ForeignKey("operators.id"), nullable=False)
     weight = Column(Integer, default=10)
 
+    source = relationship("Source", back_populates="weights")
+    operator = relationship("Operator", back_populates="weights")
+
+
 class Contact(Base):
-    __tablename__ = "Contacts"
+    __tablename__ = "contacts"
 
     id = Column(Integer, primary_key=True, index=True)
-    lead_id =
-    source_id =
-    operator_id =
-    create_time = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    lead_id = Column(Integer, ForeignKey("leads.id"), nullable=False)
+    source_id = Column(Integer, ForeignKey("sources.id"), nullable=False)
+    operator_id = Column(Integer, ForeignKey("operators.id"), nullable=True)
+
+    create_time = Column(DateTime, default=datetime.utcnow)
+
+    lead = relationship("Lead", back_populates="contacts")
+    source = relationship("Source", back_populates="contacts")
+    operator = relationship("Operator", back_populates="contacts")

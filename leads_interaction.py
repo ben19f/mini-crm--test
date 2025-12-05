@@ -16,4 +16,6 @@ def add_lead(db, unique_id: str) -> Lead:
 
 db = SessionLocal()
 
+add_lead(db, 'иванСочи')
+
 db.close()

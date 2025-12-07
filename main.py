@@ -38,6 +38,15 @@ class OperatorCreate(BaseModel):
         orm_mode = True
 
 
+class OperatorUpdate(BaseModel):
+    active_status: Optional[bool] = None
+    workload_limit: Optional[int] = None
+
+
+    class Config:
+        orm_mode = True
+
+
 @app.get("/operators/list", response_model=List[OperatorResp])
 def list_operators(active: Optional[bool] = None,
         db: Session = Depends(get_db)):
@@ -70,6 +79,18 @@ def create_operator(operator_data: OperatorCreate, db: Session = Depends(get_db)
     db.refresh(operator)
     print('gotovo')
     return operator
+
+
+@app.patch("/operators/{operator_id}", response_model=OperatorResp)
+def update_operator(
+        operator_id: int,
+        update_data: OperatorUpdate,
+        db: Session = Depends(get_db)
+):
+    """
+    Обновляет лимит нагрузки.
+    """
+    operator = db.query(Operator).filter(Operator.id == operator_id).first()
 
 
 # operators = list_operators(active=None, db=db)

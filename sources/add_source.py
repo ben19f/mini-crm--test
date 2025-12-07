@@ -14,12 +14,12 @@ def add_source(db, source_name: str):
 
 
 
-db = SessionLocal()
-
-
-source = add_source(
-    db=db,
-    source_name="bot03"
-)
-
-db.close()
+# db = SessionLocal()
+#
+#
+# source = add_source(
+#     db=db,
+#     source_name="bot03"
+# )
+#
+# db.close()

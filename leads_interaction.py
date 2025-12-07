@@ -30,8 +30,8 @@ def chek_lead(db, unique_id: str) -> Lead:
 
 
 
-db = SessionLocal()
-
-chek_lead(db, 'егорТуапсер')
-
-db.close()
+# db = SessionLocal()
+#
+# chek_lead(db, 'егорТуапсер')
+#
+# db.close()

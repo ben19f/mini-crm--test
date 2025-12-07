@@ -1,10 +1,12 @@
+from time import sleep
+
 from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy.orm import Session
 
 from database import SessionLocal
 from pydantic import BaseModel
 from typing import List, Optional
-from db_models import Operator
+from db_models import Operator, Lead
 from leads_interaction import chek_and_lead
 from operators.operators_interaction import assign_operator_for_lead
 
@@ -116,17 +118,22 @@ def update_limit(
 class LeadCreate(BaseModel):
     name: str
     phone: str
-    source_key: str  # например, "bot01"
+    source_key: str
+    unique_id: str
 
 class LeadResponse(BaseModel):
     id: int
+    unique_id: str
     name: str
     phone: str
+    # create_time: datetime
     source_key: str
-    operator_id: int  # ID назначенного оператора
+    operator_id: int
 
     class Config:
         orm_mode = True
+        arbitrary_types_allowed = True  # для datetime
+
 
 
 
@@ -140,31 +147,41 @@ def create_lead_and_assign_operator(
     # Создаём
     # лида
 
-    lead = chek_and_lead(db=db, unique_id=LeadResponse.name)
+    result = chek_and_lead(db, lead_data.unique_id)
 
-    if lead != False:
-        # Назначаем оператора
-        operator_id = assign_operator_for_lead(db, lead.id, lead_data.source_key)
-
-        if not operator_id:
-            raise HTTPException(
-                status_code=400,
-                detail="Не удалось назначить оператора для лида"
-            )
-
-        # Возвращаем полный объект лида
-        return LeadResponse(
-            id=lead.id,
-            name=lead.name,
-            source_key=lead.source_key,
-            operator_id=operator_id
-        )
-    else:
+    if result is False:
         raise HTTPException(
             status_code=400,
-            detail="Уникальное имя лида занято"
+            detail="Уникальное имя лида уже занято"
         )
 
+    # Если лид создан/найден, получаем его из БД
+    sleep(1)
+    lead = db.query(Lead).filter(Lead.unique_id == lead_data.unique_id).first()
+    if not lead:
+        raise HTTPException(
+            status_code=500,
+            detail="Ошибка: лид не найден после создания"
+        )
+
+    # чаем оператора
+    operator_id = assign_operator_for_lead(db, lead.id, lead_data.source_key)
+    if not operator_id:
+        raise HTTPException(
+            status_code=400,
+            detail="Не удалось назначить оператора для лида"
+        )
+
+    # ответ
+    return LeadResponse(
+        id=lead.id,
+        unique_id=lead.unique_id,
+        name=lead.name,
+        phone=lead.phone,
+        # create_time=lead.create_time,
+        source_key=lead_data.source_key,
+        operator_id=operator_id
+    )
 
 
 # operators = list_operators(active=None, db=db)
@@ -194,8 +211,6 @@ def create_lead_and_assign_operator(
 #      -d '{"name": "Анна", "active_status": true, "workload_limit": 10}'
 # {"id":11,"name":"Анна","active_status":true,"workload_limit":10}
 
-
-
 # ==================
 # get list
 # GET http://localhost:8000/operators/list
@@ -205,3 +220,9 @@ def create_lead_and_assign_operator(
 
 # ===============
 # curl -X PATCH "http://localhost:8000/operators/6" -H "Content-Type: application/json" -d '{"workload_limit": 3}'
+
+
+
+# ================
+# добавим лида
+# curl -X POST "http://localhost:8000/leads/" -H "Content-Type: application/json" -d '{ "unique_id": "user_12345", "name": "Иван Петров", "phone": "+79991234567", "source_key": "bot01"}'

@@ -1,8 +1,9 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
+from sqlalchemy.orm import Session
 
 from database import SessionLocal
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 from db_models import Operator
 
 # app = FastAPI(title="crm API")
@@ -30,9 +31,9 @@ class OperatorResp(BaseModel):
 
 
 
-@app.post("/operators/", response_model=List(OperatorResp))
+# @app.post("/operators/", response_model=List[OperatorResp])
 def list_operators(active: Optional[bool] = None,
-        db):
+        db: Session = Depends(get_db)):
     """
     ищем операторов список
     """

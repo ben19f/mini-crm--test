@@ -229,11 +229,7 @@ def create_lead_and_assign_operator(
 
 # ================
 # добавим лида
-# curl -X POST "http://localhost:8000/leads/" -H "Content-Type: application/json" -d '{ "unique_id": "user_12345", "name": "Иван Петров", "phone": "+79991234567", "source_key": "bot01"}'
-# curl -X POST "http://localhost:8000/leads/"   -H "Content-Type: application/json"   -d '{
-#         "unique_id": "user_54332",
-#         "source_name": "bot01"
-#       }'
+#
 
 # curl -X POST "http://localhost:8000/leads/"   -H "Content-Type: application/json"   -d '{
 #         "source_name": "bot01",

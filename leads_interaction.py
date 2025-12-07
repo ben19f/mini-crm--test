@@ -15,7 +15,7 @@ def add_lead(db, unique_id: str) -> Lead:
     db.commit()
 
 
-def chek_lead(db, unique_id: str) -> Lead:
+def chek_and_lead(db, unique_id: str) -> Lead:
     """
     Ищет лида
     """
@@ -23,9 +23,9 @@ def chek_lead(db, unique_id: str) -> Lead:
 
     if lead is None:
         add_lead(db, unique_id)
-        print(f"Создан лид {unique_id}")
+        return unique_id
     else:
-        print(f"лид {lead.unique_id} - уже есть")
+        return False
 
 
 

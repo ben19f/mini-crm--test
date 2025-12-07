@@ -5,6 +5,7 @@ from database import SessionLocal
 from pydantic import BaseModel
 from typing import List, Optional
 from db_models import Operator
+from leads_interaction import chek_and_lead
 
 app = FastAPI(title="crm API")
 
@@ -131,10 +132,18 @@ class LeadResponse(BaseModel):
 @app.post("/leads/", response_model=LeadResponse, status_code=201)
 def create_lead_and_assign_operator(
     lead_data: LeadCreate,
-    db: Session = Depends(get_db)
-):
+    db: Session = Depends(get_db)):
     """
     Создаёт лида и автоматически назначает ему оператора.
+    """
+    # Создаём
+    # лида
+
+    lead = chek_and_lead(db=db, unique_id=LeadResponse.name)
+
+    if lead != False:
+
+
 
 
 # operators = list_operators(active=None, db=db)

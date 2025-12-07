@@ -13,3 +13,7 @@ def get_db():
         db.close()
 
 
+
+@app.post("/operators/", response_model=OperatorResp, status_code=201)
+def create_operator(
+

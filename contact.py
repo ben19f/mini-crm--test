@@ -1,8 +1,7 @@
 from http.client import HTTPException
 
 from database import SessionLocal
-from db_models import Contact, Lead, Operator
-from operators_interaction import get_available_operators, select_heaviest_operator, get_current_workload
+from db_models import Contact
 
 
 def create_contact(

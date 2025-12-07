@@ -164,12 +164,12 @@ def create_lead_and_assign_operator(
         )
 
     # чаем оператора
-    print("передаю")
-    print(lead_data.unique_id)
-    print(lead.id)
-    print( lead_data.source_name)
+# print("передаю")
+#     print(lead_data.unique_id)
+#     print(lead.id)
+#     print( lead_data.source_name)
     operator_id = assign_operator_for_lead(db, lead.id, lead_data.source_name)
-    print(operator_id)
+    source_nameprint(operator_id)
     if not operator_id:
         raise HTTPException(
             status_code=400,

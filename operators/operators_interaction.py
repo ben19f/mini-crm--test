@@ -28,8 +28,8 @@ def get_available_operators(db, source_key: str) -> list[Operator]:
 
     for operator in operators:
         current_load = get_current_workload(db, operator.id)
-        print('текущая нагрузка')
-        print(current_load)
+        # print('текущая нагрузка')
+        # print(current_load)
         if current_load < operator.workload_limit:
             available_operators.append(operator)
 
@@ -90,7 +90,6 @@ def assign_operator_for_lead(
     if not lead:
         print(f"Ошибка: Лид с ID={lead_id} не найден")
         return None
-    print('я тут 1')
 
 
     source = db.query(Source).filter(Source.source_name == source_key).first()
@@ -106,14 +105,12 @@ def assign_operator_for_lead(
     if not available_operators:
         print(f"Нет доступных операторов для источника '{source_key}'")
         return None
-    print('я тут 2')
     #Выбираем лучшего оператора чтобы быстрее закончил свою слену
     selected_operator_id = select_heaviest_operator(db, available_operators)
     if not selected_operator_id:
         print("Не удалось выбрать оператора (список пуст)")
         return None
-    print('vibran operators')
-    print(selected_operator_id)
+
     # Создаём связь лид-оператор
     try:
         print(lead_id, source_id, selected_operator_id)

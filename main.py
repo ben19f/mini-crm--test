@@ -45,5 +45,9 @@ def list_operators(active: Optional[bool] = None,
     return operators
 
 
-print(list_operators(active=None, db=db))
+# print(list_operators(active=None, db=db))
+operators = list_operators(active=None, db=db)
 db.close()
+
+for op in operators:
+    print(f"ID: {op.id}, Имя: {op.name}, Активен: {op.active_status}, Лимит: {op.workload_limit}")

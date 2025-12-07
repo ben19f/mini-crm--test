@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 from db_models import Operator
 
-# app = FastAPI(title="crm API")
+app = FastAPI(title="crm API")
 
 db = SessionLocal()
 
@@ -52,6 +52,7 @@ def list_operators(active: Optional[bool] = None,
     return operators
 
 
+@app.post("/operators/", response_model=OperatorResp, status_code=201)
 def create_operator(operator_data: OperatorCreate, db: Session = Depends(get_db)):
     # ищем повторы
     if db.query(Operator).filter(Operator.name == operator_data.name).first():
@@ -78,12 +79,22 @@ def create_operator(operator_data: OperatorCreate, db: Session = Depends(get_db)
 #     print(f"ID: {op.id}, Имя: {op.name}, Активен: {op.active_status}, Лимит: {op.workload_limit}")
 
 
-test_data = OperatorCreate(
-    name="Десятый владислав",
-    active_status=True,
-    workload_limit=5
-)
+# test_data = OperatorCreate(
+#     name="Десятый владислав",
+#     active_status=True,
+#     workload_limit=5
+# )
+#
+# create_operator(operator_data=test_data, db=db)
+#
+# db.close()
 
-create_operator(operator_data=test_data, db=db)
 
-db.close()
+
+
+# =================
+# Добавление через
+# curl -X POST "http://localhost:8000/operators/" \
+#      -H "Content-Type: application/json" \
+#      -d '{"name": "Анна", "active_status": true, "workload_limit": 10}'
+# {"id":11,"name":"Анна","active_status":true,"workload_limit":10}

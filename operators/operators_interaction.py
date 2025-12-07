@@ -1,6 +1,6 @@
 from typing import Optional
 
-from db_models import Operator, Contact, Lead
+from db_models import Operator, Contact, Lead, Source
 from sources.config import operator_dict
 from database import SessionLocal
 import random
@@ -20,7 +20,6 @@ def get_available_operators(db, source_key: str) -> list[Operator]:
 
     assigned_operator_ids = operator_dict[source_key]
     available_operators = []
-
     # Получаем всех назначенных операторов из БД
     operators = db.query(Operator).filter(
         Operator.id.in_(assigned_operator_ids),
@@ -29,6 +28,8 @@ def get_available_operators(db, source_key: str) -> list[Operator]:
 
     for operator in operators:
         current_load = get_current_workload(db, operator.id)
+        print('текущая нагрузка')
+        print(current_load)
         if current_load < operator.workload_limit:
             available_operators.append(operator)
 
@@ -85,10 +86,21 @@ def assign_operator_for_lead(
 
     # Проверяем лида
     lead = db.query(Lead).filter(Lead.id == lead_id).first()
+    print(lead)
     if not lead:
         print(f"Ошибка: Лид с ID={lead_id} не найден")
         return None
     print('я тут 1')
+
+
+    source = db.query(Source).filter(Source.source_name == source_key).first()
+    if not source:
+        print(f"Ошибка: Источник с name='{source_key}' не найден в БД")
+        return None
+    source_id = source.id
+    print(f'Найден source_id={source_id} для source_key="{source_key}"')
+
+
     # Получаем операторов
     available_operators = get_available_operators(db, source_key)
     if not available_operators:
@@ -100,14 +112,17 @@ def assign_operator_for_lead(
     if not selected_operator_id:
         print("Не удалось выбрать оператора (список пуст)")
         return None
-    print('я тут 3')
+    print('vibran operators')
+    print(selected_operator_id)
     # Создаём связь лид-оператор
     try:
+        print(lead_id, source_id, selected_operator_id)
         contact = Contact(
             lead_id=lead_id,
-            source_key=source_key,
+            source_id=source_id,
             operator_id=selected_operator_id
         )
+
         db.add(contact)
         db.commit()
         print(f"Оператор ID={selected_operator_id} назначен для лида ID={lead_id}")

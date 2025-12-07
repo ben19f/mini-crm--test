@@ -59,9 +59,16 @@ def create_operator(operator_data: OperatorCreate, db: Session = Depends(get_db)
             status_code=400,
             detail="Оператор с таким именем уже существует"
         )
-
+    operator = Operator(
+        name=operator_data.name,
+        active_status=operator_data.active_status,
+        workload_limit=operator_data.workload_limit
+    )
+    db.add(operator)
+    db.commit()
+    db.refresh(operator)
     print('gotovo')
-
+    return operator
 
 
 # operators = list_operators(active=None, db=db)
@@ -72,7 +79,7 @@ def create_operator(operator_data: OperatorCreate, db: Session = Depends(get_db)
 
 
 test_data = OperatorCreate(
-    name="Второй оператор",
+    name="Десятый владислав",
     active_status=True,
     workload_limit=5
 )

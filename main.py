@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 from db_models import Operator
 from leads_interaction import chek_and_lead
+from operators.operators_interaction import assign_operator_for_lead
 
 app = FastAPI(title="crm API")
 
@@ -142,7 +143,27 @@ def create_lead_and_assign_operator(
     lead = chek_and_lead(db=db, unique_id=LeadResponse.name)
 
     if lead != False:
+        # Назначаем оператора
+        operator_id = assign_operator_for_lead(db, lead.id, lead_data.source_key)
 
+        if not operator_id:
+            raise HTTPException(
+                status_code=400,
+                detail="Не удалось назначить оператора для лида"
+            )
+
+        # Возвращаем полный объект лида
+        return LeadResponse(
+            id=lead.id,
+            name=lead.name,
+            source_key=lead.source_key,
+            operator_id=operator_id
+        )
+    else:
+        raise HTTPException(
+            status_code=400,
+            detail="Уникальное имя лида занято"
+        )
 
 
 

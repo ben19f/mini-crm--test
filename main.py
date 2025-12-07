@@ -116,18 +116,18 @@ def update_limit(
 
 
 class LeadCreate(BaseModel):
-    name: str
-    phone: str
-    source_key: str
+    # name: str
+    # phone: str
+    source_name: str
     unique_id: str
 
 class LeadResponse(BaseModel):
     id: int
     unique_id: str
-    name: str
-    phone: str
+    # name: str
+    # phone: str
     # create_time: datetime
-    source_key: str
+    source_name: str
     operator_id: int
 
     class Config:
@@ -148,11 +148,10 @@ def create_lead_and_assign_operator(
     # лида
 
     result = chek_and_lead(db, lead_data.unique_id)
-
-    if result is False:
+    if result is None:
         raise HTTPException(
             status_code=400,
-            detail="Уникальное имя лида уже занято"
+            detail="Уникальное ID лида уже занято"
         )
 
     # Если лид создан/найден, получаем его из БД
@@ -165,7 +164,9 @@ def create_lead_and_assign_operator(
         )
 
     # чаем оператора
-    operator_id = assign_operator_for_lead(db, lead.id, lead_data.source_key)
+    print( lead_data.source_name)
+    operator_id = assign_operator_for_lead(db, lead.id, lead_data.source_name)
+    print(operator_id)
     if not operator_id:
         raise HTTPException(
             status_code=400,
@@ -176,10 +177,10 @@ def create_lead_and_assign_operator(
     return LeadResponse(
         id=lead.id,
         unique_id=lead.unique_id,
-        name=lead.name,
-        phone=lead.phone,
+        # name=lead.name,
+        # phone=lead.phone,
         # create_time=lead.create_time,
-        source_key=lead_data.source_key,
+        source_name=lead_data.source_name,
         operator_id=operator_id
     )
 

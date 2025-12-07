@@ -88,19 +88,19 @@ def assign_operator_for_lead(
     if not lead:
         print(f"Ошибка: Лид с ID={lead_id} не найден")
         return None
-
+    print('я тут 1')
     # Получаем операторов
     available_operators = get_available_operators(db, source_key)
     if not available_operators:
         print(f"Нет доступных операторов для источника '{source_key}'")
         return None
-
+    print('я тут 2')
     #Выбираем лучшего оператора чтобы быстрее закончил свою слену
     selected_operator_id = select_heaviest_operator(db, available_operators)
     if not selected_operator_id:
         print("Не удалось выбрать оператора (список пуст)")
         return None
-
+    print('я тут 3')
     # Создаём связь лид-оператор
     try:
         contact = Contact(

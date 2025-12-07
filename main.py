@@ -82,7 +82,7 @@ def create_operator(operator_data: OperatorCreate, db: Session = Depends(get_db)
 
 
 @app.patch("/operators/{operator_id}", response_model=OperatorResp)
-def update_operator(
+def update_limit(
         operator_id: int,
         update_data: OperatorUpdate,
         db: Session = Depends(get_db)
@@ -91,7 +91,23 @@ def update_operator(
     Обновляет лимит нагрузки.
     """
     operator = db.query(Operator).filter(Operator.id == operator_id).first()
+    if not operator:
+        raise HTTPException(status_code=404, detail="Оператор не найден")
 
+
+    if update_data.active_status is not None:
+        operator.active_status = update_data.active_status
+    if update_data.workload_limit is not None:
+        if update_data.workload_limit < 1:
+            raise HTTPException(
+                status_code=400,
+                detail="Лимит нагрузки должен быть ≥ 1"
+            )
+        operator.workload_limit = update_data.workload_limit
+
+    db.commit()
+    db.refresh(operator)
+    return operator
 
 # operators = list_operators(active=None, db=db)
 # db.close()
@@ -128,3 +144,6 @@ def update_operator(
 
 # get active list
 # GET http://localhost:8000/operators/list/?active=true
+
+# ===============
+# curl -X PATCH "http://localhost:8000/operators/6" -H "Content-Type: application/json" -d '{"workload_limit": 3}'

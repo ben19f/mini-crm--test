@@ -109,6 +109,34 @@ def update_limit(
     db.refresh(operator)
     return operator
 
+
+
+class LeadCreate(BaseModel):
+    name: str
+    phone: str
+    source_key: str  # например, "bot01"
+
+class LeadResponse(BaseModel):
+    id: int
+    name: str
+    phone: str
+    source_key: str
+    operator_id: int  # ID назначенного оператора
+
+    class Config:
+        orm_mode = True
+
+
+
+@app.post("/leads/", response_model=LeadResponse, status_code=201)
+def create_lead_and_assign_operator(
+    lead_data: LeadCreate,
+    db: Session = Depends(get_db)
+):
+    """
+    Создаёт лида и автоматически назначает ему оператора.
+
+
 # operators = list_operators(active=None, db=db)
 # db.close()
 #

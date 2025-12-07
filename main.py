@@ -38,7 +38,7 @@ class OperatorCreate(BaseModel):
         orm_mode = True
 
 
-# @app.post("/operators/", response_model=List[OperatorResp])
+@app.get("/operators/list", response_model=List[OperatorResp])
 def list_operators(active: Optional[bool] = None,
         db: Session = Depends(get_db)):
     """
@@ -52,7 +52,7 @@ def list_operators(active: Optional[bool] = None,
     return operators
 
 
-@app.post("/operators/", response_model=OperatorResp, status_code=201)
+@app.post("/operators/create", response_model=OperatorResp, status_code=201)
 def create_operator(operator_data: OperatorCreate, db: Session = Depends(get_db)):
     # ищем повторы
     if db.query(Operator).filter(Operator.name == operator_data.name).first():
@@ -98,3 +98,12 @@ def create_operator(operator_data: OperatorCreate, db: Session = Depends(get_db)
 #      -H "Content-Type: application/json" \
 #      -d '{"name": "Анна", "active_status": true, "workload_limit": 10}'
 # {"id":11,"name":"Анна","active_status":true,"workload_limit":10}
+
+
+
+# ==================
+# get list
+# GET http://localhost:8000/operators/list
+
+# get active list
+# GET http://localhost:8000/operators/list/?active=true
